@@ -4090,5 +4090,6 @@ tags = tags.reverse().slice(0, 10)
 for (tag in tags) {
   let key = tags[tag][0]
   let value = tags[tag][1]
-  document.getElementById('tagsList').innerHTML += '<li><a href="/research-results-page?lowLevelTerm="'+ key +'" class="button">' + key + '(' + value + ')</a></li>'
+  tagsList.innerHTML += `<li><a href="/research-results-page?lowLevelTerm=${key}" class="button tag-list">${key} (${value})</a></li>`
 }
+
