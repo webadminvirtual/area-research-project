@@ -4073,13 +4073,17 @@ var masterList = [
   }
 ]
 
-var term = masterList.find(p => p.term === 'web services')
+
+//Get search term from Query params
+var term = masterList.find(p => p.term === window.location.search.split('lowLevelTerm=')[1].replace(/\+/g, ' '))
 
 var sortable = [];
 for (var vehicle in term) {
     sortable.push([vehicle, term[vehicle]]);
 }
 
+//Sort our tags by number of occurences
 var tags = sortable.sort(function(a, b) {
     return a[1] - b[1];
 });
+tags = tags.reverse().slice(0, 10)
