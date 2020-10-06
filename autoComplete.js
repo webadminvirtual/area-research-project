@@ -4075,7 +4075,7 @@ var masterList = [
 
 
 //Get search term from Query params
-var term = masterList.find(p => p.term === window.location.search.split('lowLevelTerm=')[1].replace(/\+/g, ' '))
+var term = masterList.find(p => p.term === decodeURI(window.location.search.split('lowLevelTerm=')[1].replace(/\+/g, ' ')))
 
 var sortable = [];
 for (var vehicle in term) {
@@ -4087,3 +4087,8 @@ var tags = sortable.sort(function(a, b) {
     return a[1] - b[1];
 });
 tags = tags.reverse().slice(0, 10)
+for (tag in tags) {
+  let key = tags[tag][0]
+  let value = tags[tag][1]
+  document.getElementById('tagsList').innerHTML += '<li><a href="/research-results-page?lowLevelTerm="'+ key +'" class="button">' + key + '(' + value + ')</a></li>'
+}
