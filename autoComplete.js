@@ -4093,3 +4093,15 @@ for (tag in tags) {
   tagsList.innerHTML += `<li><a href="/research-results-page?lowLevelTerm=${key}" class="button tag-list">${key} (${value})</a></li>`
 }
 
+//Catch our form before it is submitted and check whether the search term is on our list.
+document.getElementById('searchTerms').addEventListener('submit', function(e){
+  e.preventDefault()
+  var searchValue = document.getElementById('tags').value
+  tags.map((k, v) => {
+    console.log('k ', k)
+//   if (v.toLowerCase)
+  })
+})
+
+
+
