@@ -1,0 +1,90 @@
+<template>
+  <div>
+    {{ filteredArticles().length }} Articles matching term {{ lowLevelTerm }} which is part of the main topic {{ category }}    
+    <button v-if="selectedArticle" @click="selectedArticle = null">Back to Results</button>
+
+    <div class="articles" style="max-height:300px;overflow-y:scroll;">
+      <table v-if="!selectedArticle" style="width:100%;">
+        <thead>
+          <tr>
+            <td>Year</td>
+            <td>Title</td>
+            <td>DOI/Publisher Link</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(article, index) in filteredArticles()" v-bind:key="index">
+            <td>{{ article['Publication year'] }}</td>
+            <td>
+              <a @click="selectedArticle = article">{{ article['Title'] }}</a>
+            </td>
+            <td>
+              <a :href="article.DOI">Article Link</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div v-if="selectedArticle">
+      <Article
+        :article="selectedArticle"
+        :articles="articles"
+        v-on:set_article="updateArticle"
+        v-on:reset_results="selectedArticle = null"
+      />
+      <div style="height:20px; background:grey;"></div>
+    </div>
+  </div>
+</template>
+<script>
+import Article from "./Article-Single";
+export default {
+  name: "Articles",
+  components: {
+    Article
+  },
+  props: {
+    articles: Array,
+    lowLevelTerm: String,
+    category: String
+  },
+  data() {
+    return {
+      selectedArticle: null,
+      relatedIds: null
+    };
+  },
+  methods: {
+    filteredArticles: function() {
+      return this.articles.filter(article => {
+        let match = article["LowLevel"].includes(this.lowLevelTerm);
+        return match;
+      });
+    },
+    getRelatedArticles: function() {
+      return this.articles.filter(article => {
+        this.relatedIds = article["Top20Abs"];
+
+        let match = this.relatedIds.includes(article["Index"]);
+        return match;
+      });
+    },
+    updateArticle: function(value) {
+      this.selectedArticle = value;
+    }
+  }
+};
+</script>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+tr, td {
+    border: 1px solid;
+    padding: 5px;
+}
+tr:nth-child(2n) {
+    background: #eee;
+}
+</style>
