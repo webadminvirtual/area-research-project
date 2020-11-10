@@ -7,26 +7,33 @@
       @click="filterLowLevel"
       @selected="selectHandler"
       :inputProps="inputProps"
+      :on-selected="onSelected"
       :suggestions="filteredSuggestions"
       :getSuggestionValue="s => s.item.label"
       :shouldRenderSuggestions="showSearchSuggestions"
+      :class="{ disabled: lockSearchResults }"
     >
       <template slot="after-input">
         <a
           class="clear-search-button"
           :for="inputProps.id"
-          href="#"
           @click="resetSuggestions"
-        >&#10006;</a>
+          >&#10006;</a
+        >
       </template>
       <template slot-scope="{ suggestion }">
         <div>
-          <b>{{suggestion.item.label}}</b>
+          <b class="suggestion-item">{{ suggestion.item.label }}</b>
         </div>
       </template>
     </vue-autosuggest>
     <div v-if="selected">
-      <Articles :articles="researchData" :lowLevelTerm="selectedTerm" :category="category" />
+      <Articles
+        :articles="researchData"
+        :lowLevelTerm="selectedTerm"
+        :category="category"
+        v-on:updateSearchTerm="updateSearchTerm"
+      />
     </div>
   </div>
 </template>
@@ -51,18 +58,25 @@ export default {
       category: null,
       selectedTerm: null,
       showResultsTable: false,
+      lockSearchResults: false,
       inputProps: {
         id: "autosuggest__input",
         placeholder: "Search Term",
-        class: "ddd"
+        class: "ddd",
+        onInputChange: this.onInputChange
       },
       termsArray: lowLevelTermsArray
     };
   },
   methods: {
+    updateSearchTerm(item) {
+      this.lowLevel = item;
+      this.selectedTerm = item;
+    },
     filterLowLevel: function() {},
     selectHandler(item) {
       this.showResultsTable = true;
+      this.lockSearchResults = true;
       if (item) {
         this.lowLevel = item.item.label;
         this.category = item.item.category;
@@ -72,15 +86,23 @@ export default {
       }
     },
     showSearchSuggestions() {
-      if (this.lowLevel != "" && this.showSearchResults === false) {
+      if (this.lowLevel != "" && this.lockSearchResults === false) {
         return true;
       }
     },
     resetSuggestions() {
-      console.log("reset");
       this.lowLevel = "";
       this.selected = null;
       this.showResultsTable = false;
+      this.lockSearchResults = false;
+    },
+    onSelected(option) {
+      this.selected = option.item;
+    },
+    onInputChange(text) {
+      if (text === "" || text === undefined) {
+        return;
+      }
     }
   },
   computed: {
@@ -103,6 +125,9 @@ export default {
 </script>
 
 <style>
+#app {
+  min-height: 500px;
+}
 #autosuggest {
   max-width: 240px;
   position: relative;
@@ -118,10 +143,21 @@ ul[role="listbox"] {
 }
 .clear-search-button {
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: 10px;
+  top: 2px;
   bottom: 0;
-  text-decoration: none;
-  color: black;
+  font-size: 24px;
+  cursor: pointer;
+}
+.disabled input {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.autosuggest__results .autosuggest__results-item:active,
+.autosuggest__results .autosuggest__results-item:hover,
+.autosuggest__results .autosuggest__results-item:focus,
+.autosuggest__results
+  .autosuggest__results_item.autosuggest__results-item-highlighted {
+  background-color: #efefef;
 }
 </style>
