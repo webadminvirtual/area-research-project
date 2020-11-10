@@ -9,19 +9,25 @@
       :inputProps="inputProps"
       :suggestions="filteredSuggestions"
       :getSuggestionValue="s => s.item.label"
-      :shouldRenderSuggestions="checkEmptyInput"
-      @focus="checkEmptyInput"
+      :shouldRenderSuggestions="showSearchSuggestions"
     >
+      <template slot="after-input">
+        <a
+          class="clear-search-button"
+          :for="inputProps.id"
+          href="#"
+          @click="resetSuggestions"
+        >&#10006;</a>
+      </template>
       <template slot-scope="{ suggestion }">
         <div>
           <b>{{suggestion.item.label}}</b>
         </div>
       </template>
     </vue-autosuggest>
-    <div v-if="selected" >
+    <div v-if="selected">
       <Articles :articles="researchData" :lowLevelTerm="selectedTerm" :category="category" />
     </div>
-    <!-- <button class="button" @click="clickHanderl">Search</button> -->
   </div>
 </template>
 
@@ -44,6 +50,7 @@ export default {
       selected: null,
       category: null,
       selectedTerm: null,
+      showResultsTable: false,
       inputProps: {
         id: "autosuggest__input",
         placeholder: "Search Term",
@@ -53,26 +60,27 @@ export default {
     };
   },
   methods: {
-    filterLowLevel: function() {
-      // this.lowLevel = this.$refs.searchInput.value;
-    },
+    filterLowLevel: function() {},
     selectHandler(item) {
+      this.showResultsTable = true;
       if (item) {
         this.lowLevel = item.item.label;
         this.category = item.item.category;
 
         this.selected = item.item;
-        this.selectedTerm = this.lowLevel
+        this.selectedTerm = this.lowLevel;
       }
     },
-    clickHanderl() {
-      if (this.filteredSuggestions.data.length === 1) {
-        this.lowLevel = this.filteredSuggestions.data[0].label;
-        this.category = this.filteredSuggestions.data[0].category;
+    showSearchSuggestions() {
+      if (this.lowLevel != "" && this.showSearchResults === false) {
+        return true;
       }
     },
-    checkEmptyInput() {
-      return this.lowLevel != "";
+    resetSuggestions() {
+      console.log("reset");
+      this.lowLevel = "";
+      this.selected = null;
+      this.showResultsTable = false;
     }
   },
   computed: {
@@ -80,7 +88,9 @@ export default {
       return [
         {
           data: this.termsArray.filter(item => {
-            this.suggestedLabel = item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) > -1
+            this.suggestedLabel =
+              item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) >
+              -1;
             return (
               item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) > -1
             );
@@ -93,13 +103,9 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-  margin-top: 60px;
+#autosuggest {
+  max-width: 240px;
+  position: relative;
 }
 ul[role="listbox"] {
   max-height: 100px;
@@ -109,5 +115,13 @@ ul[role="listbox"] {
   margin-right: auto;
   list-style: none;
   text-align: left;
+}
+.clear-search-button {
+  position: absolute;
+  right: 0;
+  top: 5px;
+  bottom: 0;
+  text-decoration: none;
+  color: black;
 }
 </style>

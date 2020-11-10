@@ -1,9 +1,12 @@
 <template>
   <div>
-    {{ filteredArticles().length }} Articles matching term {{ lowLevelTerm }} which is part of the main topic {{ category }}    
-    <button v-if="selectedArticle" @click="selectedArticle = null">Back to Results</button>
+    {{ filteredArticles().length }} Articles matching term {{ lowLevelTerm }} which is part of the main topic {{ category }}
+    <button
+      v-if="selectedArticle"
+      @click="selectedArticle = null"
+    >Back to Results</button>
 
-    <div class="articles" style="max-height:300px;overflow-y:scroll;">
+    <div class="articles">
       <table v-if="!selectedArticle" style="width:100%;">
         <thead>
           <tr>
@@ -15,7 +18,7 @@
         <tbody>
           <tr v-for="(article, index) in filteredArticles()" v-bind:key="index">
             <td>{{ article['Publication year'] }}</td>
-            <td>
+            <td class="article-title">
               <a @click="selectedArticle = article">{{ article['Title'] }}</a>
             </td>
             <td>
@@ -32,7 +35,6 @@
         v-on:set_article="updateArticle"
         v-on:reset_results="selectedArticle = null"
       />
-      <div style="height:20px; background:grey;"></div>
     </div>
   </div>
 </template>
@@ -76,15 +78,30 @@ export default {
 };
 </script>
 <style>
-table, th, td {
+table,
+th,
+td {
   border: 1px solid black;
   border-collapse: collapse;
 }
-tr, td {
-    border: 1px solid;
-    padding: 5px;
+tr,
+td {
+  border: 1px solid;
+  padding: 5px;
 }
 tr:nth-child(2n) {
-    background: #eee;
+  background: #eee;
+}
+.article-title {
+  cursor: pointer;
+  font-weight: bold;
+}
+.articles {
+  overflow-y: scroll;
+  width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 300px;
+  border: 1px solid black;
 }
 </style>

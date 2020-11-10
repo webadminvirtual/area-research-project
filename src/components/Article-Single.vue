@@ -9,7 +9,7 @@
     <hr>
     <h4>Related Articles</h4>
     <ul>
-      <li v-for="(entry, index) in getRelatedArticles()" v-bind:key="index"> <a @click="updateArticle(entry)">{{ entry['Title']}}</a></li>
+      <li v-for="(entry, index) in getRelatedArticles()" v-bind:key="index" class="related-article-title"> <a @click="updateArticle(entry)">{{ entry['Title']}}</a></li>
     </ul>
   </div>
 </template>
@@ -46,3 +46,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+.related-article-title {
+  cursor: pointer;
+  margin-bottom: 5px;
+  list-style-type: none;
+}
+</style>
