@@ -1,6 +1,17 @@
 <template>
-  <div id="app">
-    {{ researchData.length }} Total Articles
+  <div id="app" class="container">
+    <h3 class="text-center">{{ researchData.length }} Total Articles</h3>
+    <p>
+      XYZ tool is a searchable database of {{ researchData.length }} articles
+      pulled since 2017. AREA members can search through this database and
+      access relevant URL links to research, abstracts, and graphical
+      information about AR enterprise research.
+    </p>
+    <a
+      class="top-link"
+      href="/area-research/area-research-agenda/name-of-tool/explore-categories/"
+      >Explore all main topics</a
+    >
     <vue-autosuggest
       ref="searchInput"
       v-model="lowLevel"
@@ -9,16 +20,21 @@
       :inputProps="inputProps"
       :on-selected="onSelected"
       :suggestions="filteredSuggestions"
-      :getSuggestionValue="s => s.item.label"
+      :getSuggestionValue="(s) => s.item.label"
       :shouldRenderSuggestions="showSearchSuggestions"
       :class="{ disabled: lockSearchResults }"
     >
       <template slot="after-input">
-        <a class="clear-search-button" :for="inputProps.id" @click="resetSuggestions">&#10006;</a>
+        <a
+          class="clear-search-button"
+          :for="inputProps.id"
+          @click="resetSuggestions"
+          >&#10006;</a
+        >
       </template>
       <template slot-scope="{ suggestion }">
         <div>
-          <b class="suggestion-item">{{ suggestion.item.label }}</b>
+          <span class="suggestion-item">{{ suggestion.item.label }}</span>
         </div>
       </template>
     </vue-autosuggest>
@@ -42,9 +58,9 @@ export default {
   name: "App",
   components: {
     Articles,
-    VueAutosuggest
+    VueAutosuggest,
   },
-  data: function() {
+  data: function () {
     return {
       researchData: json,
       lowLevel: "",
@@ -58,9 +74,9 @@ export default {
         id: "autosuggest__input",
         placeholder: "Search Term",
         class: "ddd",
-        onInputChange: this.onInputChange
+        onInputChange: this.onInputChange,
       },
-      termsArray: lowLevelTermsArray
+      termsArray: lowLevelTermsArray,
     };
   },
   methods: {
@@ -68,7 +84,7 @@ export default {
       this.lowLevel = item;
       this.selectedTerm = item;
     },
-    filterLowLevel: function() {},
+    filterLowLevel: function () {},
     selectHandler(item) {
       this.showResultsTable = true;
       this.lockSearchResults = true;
@@ -98,21 +114,21 @@ export default {
       if (text === "" || text === undefined) {
         return;
       }
-    }
+    },
   },
   computed: {
     filteredSuggestions() {
       return [
         {
-          data: this.termsArray.filter(item => {
+          data: this.termsArray.filter((item) => {
             return (
               item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) > -1
             );
-          })
-        }
+          }),
+        },
       ];
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -128,6 +144,12 @@ export default {
 }
 #autosuggest__input {
   width: 300px;
+  background-color: #f1f1f1;
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10em;
 }
 ul[role="listbox"] {
   max-height: 100px;
@@ -137,14 +159,14 @@ ul[role="listbox"] {
   margin-right: auto;
   list-style: none;
   text-align: left;
+  padding-left: 0;
 }
 .clear-search-button {
   position: absolute;
-  top: -4px;
-  bottom: 0;
+  top: 5px;
   font-size: 20px;
   cursor: pointer;
-  left: 285px;
+  left: 300px;
 }
 .disabled input {
   pointer-events: none;
@@ -155,5 +177,23 @@ ul[role="listbox"] {
 .autosuggest__results .autosuggest__results-item:focus,
 .autosuggest__results-item--highlighted.autosuggest__results-item {
   background-color: #efefef;
+}
+.top-link {
+  float: right;
+}
+.text-center {
+  text-align: center;
+}
+.suggestion-item {
+  font-family: "Lato", sans-serif;
+  font-size: 20px;
+  color: #0a3a4a;
+  font-weight: 300;
+  line-height: 17px;
+  margin-bottom: 3px;
+}
+#autosuggest-autosuggest__results {
+  border: 1px solid;
+  padding-left: 5px;
 }
 </style>
