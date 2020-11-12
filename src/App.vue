@@ -110,9 +110,6 @@ export default {
       return [
         {
           data: this.termsArray.filter(item => {
-            this.suggestedLabel =
-              item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) >
-              -1;
             return (
               item.label.toLowerCase().indexOf(this.lowLevel.toLowerCase()) > -1
             );
@@ -156,8 +153,7 @@ ul[role="listbox"] {
 .autosuggest__results .autosuggest__results-item:active,
 .autosuggest__results .autosuggest__results-item:hover,
 .autosuggest__results .autosuggest__results-item:focus,
-.autosuggest__results
-  .autosuggest__results_item.autosuggest__results-item-highlighted {
+.autosuggest__results-item--highlighted.autosuggest__results-item {
   background-color: #efefef;
 }
 </style>
