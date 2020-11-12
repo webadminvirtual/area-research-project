@@ -5,9 +5,13 @@
       class="term"
       v-for="(value, index) in getRelatedTerms()"
       v-bind:key="index"
-      >{{ value[0] }} - <span class="term-count">{{ value[1] }}</span></span
     >
+      {{ value[0] }} -
+      <span class="term-count">{{ value[1] }}</span>
+    </span>
+
   </div>
+  
 </template>
 <script>
 import { terms } from "../assets/co-occurences";
@@ -24,7 +28,9 @@ export default {
   methods: {
     getRelatedTerms() {
       let sortable = [];
-      let term = this.terms.find(a => a.term === this.lowLevelTerm);
+
+      let term = this.terms.find(a => a.term === this.lowLevelTerm)
+
       for (var t in term) {
         sortable.push([t, term[t]]);
       }

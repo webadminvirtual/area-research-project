@@ -2,34 +2,13 @@
   <div>
     {{ filteredArticles().length }} Articles matching term
     {{ lowLevelTerm }} which is part of the main topic {{ category }}
-    <button v-if="selectedArticle" @click="selectedArticle = null">
-      Back to Results
-    </button>
+    <button
+      v-if="selectedArticle"
+      @click="selectedArticle = null"
+    >Back to Results</button>
 
-    <div class="articles">
-      <table
-        v-if="!selectedArticle && filteredArticles().length != 0"
-        style="width:100%;"
-      >
-        <thead>
-          <tr>
-            <td>Year</td>
-            <td>Title</td>
-            <td>DOI/Publisher Link</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(article, index) in filteredArticles()" v-bind:key="index">
-            <td>{{ article["Publication year"] }}</td>
-            <td class="article-title">
-              <a @click="selectedArticle = article">{{ article["Title"] }}</a>
-            </td>
-            <td>
-              <a :href="article.DOI">Article Link</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="articles" v-if="!selectedArticle">
+      <Table :articles="filteredArticles()" v-on:set_article="updateArticle" />
     </div>
     <div v-if="selectedArticle">
       <Article
@@ -40,6 +19,7 @@
       />
     </div>
     <Coocurences
+      v-if="!selectedArticle"
       v-on:update_search="updateSearch"
       :lowLevelTerm="lowLevelTerm"
     />
@@ -48,12 +28,14 @@
 <script>
 import Article from "./Article-Single";
 import Coocurences from "./Cooccurences";
+import Table from "./Table";
 
 export default {
   name: "Articles",
   components: {
     Article,
-    Coocurences
+    Coocurences,
+    Table
   },
   props: {
     articles: Array,
@@ -121,17 +103,18 @@ tr:nth-child(2n) {
 .article-title {
   cursor: pointer;
   font-weight: bold;
+  font-style: italic;
 }
 .articles {
   overflow-y: scroll;
-  width: 80vw;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   min-height: 300px;
   max-height: 300px;
 }
 .cooccurences {
-  width: 80vw;
+  width: 100%;
   display: flex;
   margin-left: auto;
   margin-right: auto;
@@ -146,5 +129,12 @@ tr:nth-child(2n) {
   text-align: center;
   font-weight: bold;
   font-style: italic;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

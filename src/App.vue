@@ -14,12 +14,7 @@
       :class="{ disabled: lockSearchResults }"
     >
       <template slot="after-input">
-        <a
-          class="clear-search-button"
-          :for="inputProps.id"
-          @click="resetSuggestions"
-          >&#10006;</a
-        >
+        <a class="clear-search-button" :for="inputProps.id" @click="resetSuggestions">&#10006;</a>
       </template>
       <template slot-scope="{ suggestion }">
         <div>
@@ -124,10 +119,15 @@ export default {
 <style>
 #app {
   min-height: 500px;
+  max-width: 100%;
+  overflow: hidden;
 }
 #autosuggest {
-  max-width: 240px;
+  width: 300px;
   position: relative;
+}
+#autosuggest__input {
+  width: 300px;
 }
 ul[role="listbox"] {
   max-height: 100px;
@@ -140,11 +140,11 @@ ul[role="listbox"] {
 }
 .clear-search-button {
   position: absolute;
-  right: 10px;
-  top: 2px;
+  top: -4px;
   bottom: 0;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
+  left: 285px;
 }
 .disabled input {
   pointer-events: none;
